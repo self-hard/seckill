@@ -60,12 +60,27 @@ mysql -u root -p < sql/schema.sql
 # 2. 启动 Redis（默认 6379）
 redis-server
 
-# 3. 修改 src/main/resources/application.yml 中的数据库账号密码
+# 3. 按需配置数据库账号密码（环境变量或 application.yml，见下方配置表）
 
 # 4. 构建并启动
 mvn clean package -DskipTests
 java -jar target/seckill-1.0.0.jar
 ```
+
+### 配置
+
+`application.yml` 中的连接信息全部支持环境变量覆盖，默认值仅供本地开发：
+
+| 环境变量 | 默认值 | 说明 |
+|---|---|---|
+| `SECKILL_DB_HOST` | `127.0.0.1` | MySQL 地址 |
+| `SECKILL_DB_PORT` | `3306` | MySQL 端口 |
+| `SECKILL_DB_USERNAME` | `root` | 数据库账号 |
+| `SECKILL_DB_PASSWORD` | `123456` | 数据库密码，正式环境请务必用环境变量注入 |
+| `SECKILL_REDIS_HOST` | `127.0.0.1` | Redis 地址 |
+| `SECKILL_REDIS_PORT` | `6379` | Redis 端口 |
+
+限流阈值与消费线程数在 `application.yml` 的 `seckill` 节点下：`global-qps`、`user-qps`、`consumer-threads`。
 
 ## 接口
 
