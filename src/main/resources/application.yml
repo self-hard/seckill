@@ -1,0 +1,56 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 300
+      min-spare: 50
+
+spring:
+  application:
+    name: seckill
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/seckill?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    username: root
+    password: "123456"
+    hikari:
+      maximum-pool-size: 40
+      minimum-idle: 5
+      connection-timeout: 3000
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 200
+          max-idle: 100
+          min-idle: 20
+          max-wait: 2000ms
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+
+seckill:
+  # 全局令牌桶：单机每秒放行请求数
+  global-qps: 3000
+  # 单用户每秒最多请求次数（防脚本刷单）
+  user-qps: 5
+  # 异步下单队列
+  queue-key: seckill:order:queue
+  # 下单消费线程数：每笔订单一个事务，靠线程数把 MySQL 提交等待并行起来
+  consumer-threads: 16
+
+logging:
+  level:
+    root: warn
+    com.ran.seckill: info
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %-5level %logger{0} - %msg%n"
